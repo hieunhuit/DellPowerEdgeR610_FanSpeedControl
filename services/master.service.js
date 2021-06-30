@@ -118,7 +118,7 @@ module.exports = {
 			try {
 				const slave = await this.getSlaveCpuTemperature();
 				if (!slave.status || !slave.temperature) throw Error(`Operate failed ${slave.msg?", "+slave.msg:", cannot get CPU temperature"}`);
-				if (slave.temperature < 50) await this.broker.call("fanService.startFanJob");
+				if (slave.temperature < 50) await this.broker.call("slaveService.startFanJob");
         if (slave.isHealthy) {
           result.msg = `Slave is healthy with cpu temp: ${slave.temperature}, bypass operate`;
           result.status = true;
