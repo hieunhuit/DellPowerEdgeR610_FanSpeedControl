@@ -36,7 +36,7 @@ module.exports = {
 		  this.getLocalService("slaveService")
 			.actions.runCronjob()
 			.then(() => {
-			  //this.logger.info("fanSpeedCronJob run at ", moment().format("YYYY-MM-DD HH:mm:ss"));
+			  //this.logger.info("slaveServiceCronJob run at ", moment().format("YYYY-MM-DD HH:mm:ss"));
 			});
 		},
 		runOnInit: function () {
@@ -78,6 +78,11 @@ module.exports = {
 			async handler() {
 				this.isHealthy = true;
 				return await this.startFanJob();
+			}
+		},
+		stopFanJob: {
+			async handler() {
+				return await this.stopFanJob();
 			}
 		}
 	},
@@ -215,7 +220,7 @@ module.exports = {
 			return result;
 		},
 		startFanJob() {
-			let job = this.getJob("fanSpeedCronJob");
+			let job = this.getJob("slaveServiceCronJob");
 			if (job) {
 				job.start();
 				return true;
@@ -223,7 +228,7 @@ module.exports = {
 			return false;
 		},
 		stopFanJob() {
-			let job = this.getJob("fanSpeedCronJob");
+			let job = this.getJob("slaveServiceCronJob");
 			if (job) {
 				job.stop();
 				return true;
