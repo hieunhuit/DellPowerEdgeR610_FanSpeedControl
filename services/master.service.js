@@ -47,29 +47,29 @@ module.exports = {
 	 * Actions
 	 */
 	actions: {
-    getNodeCpuTemperature: {
+    getSlaveCpuTemperature: {
       async handler(ctx) {
         return await this.getSlaveCpuTemperature();
       }
     },
-    setNodeDefaultSpeedFan: {
+    setSlaveDefaultSpeedFan: {
       async handler(ctx) {
         return await this.setSlaveDefaultSpeedFan();
       }
     },
-    fanOperateNode: {
+    fanOperateSlave: {
       async handler(ctx) {
-        return await this.fanOperateNode();
+        return await this.fanOperateSlave();
       }
     },
-    setNodeFanSpeed: {
+    setSlaveFanSpeed: {
       async handler(ctx) {
         return await this.setSlaveFanSpeed(ctx.params.speed);
       }
     },
     runCronjob: {
 			async handler() {
-				return await this.fanOperateNode();
+				return await this.fanOperateSlave();
 			}
 		},
 	},
@@ -116,22 +116,22 @@ module.exports = {
     async fanOperateSlave() {
 			let result = { status: false, msg: "" };
 			try {
-				const node = await this.getSlaveCpuTemperature();
-				if (!node.status || !node.temperature) throw Error(`Operate failed ${node.msg?", "+node.msg:", cannot get CPU temperature"}`);
-				if (node.temperature < 50) await this.broker.call("fanService.startFanJob");
-        if (node.isHealthy) {
-          result.msg = `Slave is healthy with cpu temp: ${node.temperature}, bypass operate`;
+				const slave = await this.getSlaveCpuTemperature();
+				if (!slave.status || !slave.temperature) throw Error(`Operate failed ${slave.msg?", "+slave.msg:", cannot get CPU temperature"}`);
+				if (slave.temperature < 50) await this.broker.call("fanService.startFanJob");
+        if (slave.isHealthy) {
+          result.msg = `Slave is healthy with cpu temp: ${slave.temperature}, bypass operate`;
           result.status = true;
           return result;
 				}
         this.logger.debug("Slave is not stable, Master will take control for speed fan")
-				if (node.temperature > 20 && node.temperature < 70) {
-					const setFanResult = await this.setSlaveFanSpeed(Number(node.temperature) - Number(this.settings.fanSpeedOfset));
+				if (slave.temperature > 20 && slave.temperature < 70) {
+					const setFanResult = await this.setSlaveFanSpeed(Number(slave.temperature) - Number(this.settings.fanSpeedOfset));
 					if (!setFanResult.status) throw Error(`Operate failed ${setFanResult.msg?", "+setFanResult.msg:", cannot set fan speed"}`);
-					result.msg = `CPU Temp: ${node.temperature} - ${setFanResult.msg}`;
+					result.msg = `CPU Temp: ${slave.temperature} - ${setFanResult.msg}`;
 					this.logger.info(result.msg);
 					result.status = true;
-				} else if (node.temperature > 70) {
+				} else if (slave.temperature > 70) {
 					await this.setSlaveDefaultSpeedFan();	
 				}
 			} catch (e) {
