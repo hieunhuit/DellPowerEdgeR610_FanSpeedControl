@@ -142,7 +142,7 @@ module.exports = {
 			}, 2000);
 			try {
 				if (!speed || isNaN(speed) || Number(speed) < 20 || Number(speed) > 100) throw Error("Speed is invalid, speed must be a number between 20 and 100");
-				const hexValue = speed.toString(16);
+				const hexValue = Number(speed).toString(16);
 				ps.addCommand(`cd \"${this.settings.ipmitoolTemplates.directory}\"`);
 				await ps.invoke()
 				.then(() => {

@@ -110,7 +110,7 @@ module.exports = {
 			let result = { status: false, msg: "" };
 			try {
 				if (!speed || isNaN(speed) || Number(speed) < 20 || Number(speed) > 100) throw Error("Speed is invalid, speed must be a number between 20 and 100");
-				const hexValue = speed.toString(16);
+				const hexValue = Number(speed).toString(16);
 				exec(`ipmitool -I lanplus -H ${this.settings.host} -U ${this.settings.user} -P ${this.settings.pass} ${this.settings.ipmitoolTemplates.enableFanSpeedControl}`, (err1) => {
 					if (err1) throw err1;
 					exec(`ipmitool -I lanplus -H ${this.settings.host} -U ${this.settings.user} -P ${this.settings.pass} ${this.settings.ipmitoolTemplates.setFanSpeedControl} 0x${hexValue}`, (err2) => {
