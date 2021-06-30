@@ -1,0 +1,10 @@
+{
+  "apps" : [{
+    "name"       : "masterService",
+    "namespace"  : "DFS",
+    "script"     : "./node_modules/moleculer/bin/moleculer-runner.js",
+    "args"       : "--config moleculer.config.js services/api.service.js services/master.service.js",
+    "instances"  : 1,
+    "autorestart": false
+  }]
+}
