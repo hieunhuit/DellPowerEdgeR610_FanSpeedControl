@@ -1,0 +1,42 @@
+{
+  "name": "Dell_R610_FAN_SPEED",
+  "version": "1.0.0",
+  "description": "My Moleculer-based microservices project",
+  "scripts": {
+    "slave": "moleculer-runner --repl --hot services/slave.service.js",
+    "master": "moleculer-runner --repl --hot services/master.service.js",
+    "start": "moleculer-runner",
+    "cli": "moleculer connect AMQP",
+    "ci": "jest --watch",
+    "test": "jest --coverage"
+  },
+  "keywords": [
+    "microservices",
+    "moleculer"
+  ],
+  "author": "",
+  "devDependencies": {
+    "jest": "^26.6.3",
+    "jest-cli": "^26.6.3",
+    "moleculer-repl": "^0.6.4"
+  },
+  "dependencies": {
+    "amqplib": "^0.6.0",
+    "dotenv": "^10.0.0",
+    "moleculer": "^0.14.13",
+    "moleculer-cron": "0.0.2",
+    "moleculer-web": "^0.9.1",
+    "node-powershell": "^4.0.0"
+  },
+  "engines": {
+    "node": ">= 10.x.x"
+  },
+  "jest": {
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node",
+    "rootDir": "./services",
+    "roots": [
+      "../test"
+    ]
+  }
+}
