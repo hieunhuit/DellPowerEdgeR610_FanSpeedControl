@@ -7,7 +7,7 @@ const Cron = require("moleculer-cron");
  * @typedef {import('moleculer').Context} Context Moleculer's Context
  */
 module.exports = {
-	name: "fanService",
+	name: "slaveService",
 
 	/**
 	 * Settings
@@ -30,10 +30,10 @@ module.exports = {
 	 */
 	dependencies: [],
 	crons: [{
-		name: "fanSpeedCronJob",
+		name: "slaveServiceCronJob",
 		cronTime: "0/2 * * * * *",
 		onTick: function () {
-		  this.getLocalService("fanService")
+		  this.getLocalService("slaveService")
 			.actions.runCronjob()
 			.then(() => {
 			  //this.logger.info("fanSpeedCronJob run at ", moment().format("YYYY-MM-DD HH:mm:ss"));
@@ -89,7 +89,7 @@ module.exports = {
         async getCPUTemperature() {
 			let result = { status: false, msg: "" };
 			try {
-				let res = await axios.get("http://localhost:8085/data.json");
+				let res = await axios.get(`http://${process.env.HOST_RUN_SLAVE_SERVICE}:8085/data.json`);
 				if (!res || Number(res.status) !== 200 || !res.data) throw Error("Cannot get CPU temperature");
 				// Build cores object
 				let cpus = res.data.Children[0].Children;
