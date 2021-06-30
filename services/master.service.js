@@ -72,6 +72,17 @@ module.exports = {
 				return await this.fanOperateSlave();
 			}
 		},
+		startFanJob: {
+			async handler() {
+				this.isHealthy = true;
+				return await this.startFanJob();
+			}
+		},
+		stopFanJob: {
+			async handler() {
+				return await this.stopFanJob();
+			}
+		}
 	},
 
 	/**
@@ -140,6 +151,22 @@ module.exports = {
 				if (rs) result.msg += rs.msg;
 			}
 			return result;
+		},
+		startFanJob() {
+			let job = this.getJob("masterServiceCronJob");
+			if (job) {
+				job.start();
+				return true;
+			}
+			return false;
+		},
+		stopFanJob() {
+			let job = this.getJob("masterServiceCronJob");
+			if (job) {
+				job.stop();
+				return true;
+			}
+			return false;
 		}
 	},
 
@@ -164,3 +191,28 @@ module.exports = {
 
 	}
 };
+// *  *  *  *  *  *
+// ┬  ┬  ┬  ┬  ┬  ┬
+// │  │  │  │  │  └─────────────── day of week (0 - 7) (0 and 7 - represents Sunday)
+// │  │  │  │  └────────────────── month (1 - 12)
+// │  │  │  └───────────────────── day of month (1 - 31)
+// │  │  └──────────────────────── hour (0 - 23)
+// │  └─────────────────────────── minute (0 - 59)
+// └────────────────────────────── second (0 - 59)
+
+// * * * * * * - every second
+// 0 * * * * * - every minute
+// 0 0 * * * * - every hour
+// 0 0 0 * * * - every day
+// 0 0 0 * * 1 - every monday
+// 0 1-2 * * * - every first and second minutes of hour
+// 0 0 1,2 * * - every first and second hours of day
+// 0 0 0-12/2 * * - every second hour of day first half
+
+// also you can use synonyms:
+// * @yearly   - 0 0 0 1 1 *
+// * @annually - 0 0 0 1 1 *
+// * @monthly  - 0 0 0 1 * *
+// * @weekly   - 0 0 0 * * 0
+// * @daily    - 0 0 0 * * *
+// * @hourly   - 0 0 * * * *
